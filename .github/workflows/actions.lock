@@ -6,12 +6,18 @@ workflows:
     '.github/workflows/ci.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
+        - 'actions/download-artifact@v8.0.2'
         - 'actions/setup-python@v7.1.0'
         - 'actions/upload-artifact@v7.0.2'
+        - 'pandoc/actions@v1.1.1'
+        - 'typst-community/setup-typst@v5.3.2'
     '.github/workflows/deploy.yml':
         - 'actions/download-artifact@v8.0.2'
     '.github/workflows/lint.yml':
         - 'actions/checkout@v7.0.1'
+    '.github/workflows/pdf-publish.yml':
+        - 'actions/download-artifact@v8.0.2'
+        - 'softprops/action-gh-release@v3.0.4'
     '.github/workflows/policy-commit-convention.yml':
         - 'actions/github-script@v9.0.0'
     '.github/workflows/policy-ruff-format.yml':
@@ -55,3 +61,18 @@ dependencies:
         commit: 'sha1-68559e99cc807c1eb7e9238fd43a15bba460eec2'
         owner_id: 115962839
         repo_id: 846733598
+    'pandoc/actions@v1.1.1':
+        ref: 'v1.1.1'
+        commit: 'sha1-86321b6dd4675f5014c611e05088e10d4939e09e'
+        owner_id: 33763444
+        repo_id: 524033979
+    'softprops/action-gh-release@v3.0.4':
+        ref: 'v3.0.4'
+        commit: 'sha1-8a0cd651e5b2365bd640854a3fa5dfc70e4875f3'
+        owner_id: 2242
+        repo_id: 204253808
+    'typst-community/setup-typst@v5.3.2':
+        ref: 'v5.3.2'
+        commit: 'sha1-00ad6338f0b34724ea002136bfb701a6c18585b0'
+        owner_id: 144882637
+        repo_id: 625450644

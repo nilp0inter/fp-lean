@@ -123,3 +123,57 @@ jobs:
           path: book/_out/html-multi
           retention-days: 7
           if-no-files-found: error
+
+  pdf:
+    name: Build book PDF
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read # download the book-html artifact from the build job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install pandoc
+        # The math conversion was verified with pandoc 3.7.0.2. The version is
+        # pinned so a new pandoc cannot silently change generated Typst math;
+        # bump it together with a re-verified conversion.
+        uses: pandoc/actions/setup@v1.1.1
+        with:
+          version: 3.7.0.2
+
+      - name: Install Typst
+        # Same reasoning: pagination and layout were verified with 0.15.1.
+        uses: typst-community/setup-typst@v5.3.2
+        with:
+          typst-version: 0.15.1
+
+      - name: Download book HTML
+        uses: actions/download-artifact@v8.0.2
+        with:
+          name: book-html
+          path: book/_out/html-multi
+
+      - name: Convert HTML to Typst
+        run: python3 typst/convert.py
+
+      - name: Compile PDF
+        run: |
+          set -euo pipefail
+          typst compile --root . --font-path book/static/fonts \
+            typst/book.typ typst/fp-lean.pdf 2> typst/compile-book.log
+          if [ -s typst/compile-book.log ]; then
+            echo "::error::typst emitted diagnostics:"
+            cat typst/compile-book.log
+            exit 1
+          fi
+
+      - name: Upload book PDF
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: book-pdf
+          path: typst/fp-lean.pdf
+          retention-days: 7
+          if-no-files-found: error
