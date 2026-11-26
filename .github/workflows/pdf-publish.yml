@@ -33,6 +33,8 @@ jobs:
         with:
           name: book-pdf
           path: dist
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
 
       - name: Publish the release
         uses: softprops/action-gh-release@v3.0.4
